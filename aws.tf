@@ -20,6 +20,24 @@ provider "aws" {
   region      = var.aws_region
 }
 
+variable "aws_access_key" {
+    description = "AWS Access Key"
+    type = string
+    sensitive = true
+}
+
+variable "aws_secret_key" {
+    description = "AWS Secret Key"
+    type = string
+    sensitive = true
+}
+
+variable "aws_region" {
+    description = "AWS Region"
+    type = string
+    default = "us-east-1"
+}
+
 resource "aws_instance" "app_server" {
   ami           = "ami-079db87dc4c10ac91"
   instance_type = "t2.micro"
@@ -47,6 +65,13 @@ resource "aws_security_group" "instance" {
   name = var.security_group_name
 
   ingress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
